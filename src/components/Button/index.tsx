@@ -12,7 +12,7 @@ const Button: React.FC<IButtonProps & Props> = props => {
         {...props}
         px="16px"
         py="12px"
-        bg="white"
+        bg={'white'}
         borderWidth="1px"
         borderRadius="12px"
         _pressed={{bg: 'primary.100'}}
@@ -29,7 +29,7 @@ const Button: React.FC<IButtonProps & Props> = props => {
       px="16px"
       py="12px"
       mb="16px"
-      bg="primary.200"
+      bg={props.bg || 'primary.200'}
       _pressed={{bg: 'primary.300'}}
       borderRadius="12px"
       {...(props.disabled && {background: '#F2F4F7'})}

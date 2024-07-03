@@ -80,6 +80,10 @@ const PathRoutes = {
 
   feedbackSession: {
     about: '/feedbackSession/about/:sessionId',
+    ai: {
+      loading: '/feedbackSession/ai/loading',
+      suggestion: '/feedbackSession/ai/suggestion',
+    },
     chooseCompetence: '/feedbackSession/chooseCompetence',
     form: '/feedbackSession/form',
     completed: '/feedbackSession/completed',

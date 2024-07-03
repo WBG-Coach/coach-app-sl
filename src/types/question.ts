@@ -10,3 +10,9 @@ export type Question = {
 
   answers?: Answer[];
 };
+
+export interface QuestionWithSuggestions extends Partial<Question> {
+  suggestionDescription: string;
+  answerAverage: number;
+  suggestions: string[];
+}

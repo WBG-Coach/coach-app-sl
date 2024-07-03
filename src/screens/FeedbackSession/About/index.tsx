@@ -19,9 +19,9 @@ import Header from '../../../components/Header';
 const FeedbackSessionAbout: React.FC = () => {
   const {t} = useTranslation();
   const theme = useTheme();
-  const params = useParams<{sessionId: string}>();
   const isTablet = Tablet();
   const navigate = useNavigate();
+  const params = useParams<{sessionId: string}>();
 
   return (
     <>
@@ -91,7 +91,7 @@ const FeedbackSessionAbout: React.FC = () => {
             color={'white'}
             background={'primary.200'}
             onPress={() =>
-              navigate(PathRoutes.feedbackSession.chooseCompetence, {
+              navigate(PathRoutes.feedbackSession.ai.loading, {
                 replace: true,
                 state: params,
               })

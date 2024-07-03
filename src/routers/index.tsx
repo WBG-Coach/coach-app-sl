@@ -44,6 +44,8 @@ import LoginScreen from '../screens/Login/Main';
 import OTPScreen from '../screens/Login/OTP';
 import SignupScreen from '../screens/SignUp/Main';
 import SignupSuccessScreen from '../screens/SignUp/Success';
+import FeedbackAILoading from '../screens/FeedbackSession/ArtificialInteligence/Loading';
+import FeedbackAISuggestion from '../screens/FeedbackSession/ArtificialInteligence/Sugestion';
 
 const RouterProvider: React.FC = () => {
   return (
@@ -142,6 +144,14 @@ const RouterProvider: React.FC = () => {
         <Route
           path={PathRoutes.feedbackSession.about}
           Component={FeedbackSessionAbout}
+        />
+        <Route
+          path={PathRoutes.feedbackSession.ai.loading}
+          Component={FeedbackAILoading}
+        />
+        <Route
+          path={PathRoutes.feedbackSession.ai.suggestion}
+          Component={FeedbackAISuggestion}
         />
         <Route
           path={PathRoutes.feedbackSession.chooseCompetence}

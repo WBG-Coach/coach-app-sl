@@ -15,3 +15,8 @@ export type Answer = {
   created_at: Date;
   updated_at: Date;
 };
+
+export interface AnswerWithSuggestions extends Partial<Answer> {
+  suggestionDescription: string;
+  suggestions: string[];
+}
