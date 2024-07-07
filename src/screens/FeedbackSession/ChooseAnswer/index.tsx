@@ -16,7 +16,9 @@ const FeedbackSessionChooseAnswer: React.FC = () => {
   >([]);
   const [selectedAnswer, setSelectedAnswer] = useState<Answer>();
   const navigate = useNavigate();
-  const {state} = useLocation();
+  const {
+    state: {AIAnswer, ...state},
+  } = useLocation();
   const {t} = useTranslation();
 
   useEffect(() => {
@@ -27,6 +29,18 @@ const FeedbackSessionChooseAnswer: React.FC = () => {
 
   const goToFeedbackForm = () => {
     if (selectedAnswer) {
+      if (AIAnswer) {
+        navigate(
+          PathRoutes.feedbackSession.ai.loading.replace(':answerId', AIAnswer),
+          {
+            replace: true,
+            state,
+          },
+        );
+
+        return;
+      }
+
       navigate(PathRoutes.feedbackSession.form, {
         replace: true,
         state: {
