@@ -9,6 +9,8 @@ import './i18n';
 import i18n from './i18n';
 import moment from 'moment';
 import {useTranslation} from 'react-i18next';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import 'react-native-gesture-handler';
 
 const App = () => {
   const currentLanguage = i18n.languages[0];
@@ -17,13 +19,15 @@ const App = () => {
   const {t} = useTranslation();
 
   return (
-    <NativeBaseProvider theme={theme}>
-      <NativeRouter>
-        <CoachProvider>
-          <RouterProvider />
-        </CoachProvider>
-      </NativeRouter>
-    </NativeBaseProvider>
+    <GestureHandlerRootView style={{flex: 1}}>
+      <NativeBaseProvider theme={theme}>
+        <NativeRouter>
+          <CoachProvider>
+            <RouterProvider />
+          </CoachProvider>
+        </NativeRouter>
+      </NativeBaseProvider>
+    </GestureHandlerRootView>
   );
 };
 

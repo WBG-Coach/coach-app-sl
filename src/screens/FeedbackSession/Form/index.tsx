@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   Text,
   VStack,
@@ -6,8 +6,7 @@ import {
   TextArea,
   useTheme,
   ScrollView,
-  Center,
-  Spinner,
+  View,
 } from 'native-base';
 import ImagePickerModal from '../../../components/ImagePickerModal';
 import {SessionService} from '../../../services/session.service';
@@ -19,8 +18,8 @@ import Button from '../../../components/Button';
 import {useTranslation} from 'react-i18next';
 import Icon from '../../../components/Icon';
 import Page from '../../../components/Page';
-import {Question} from '../../../types/question';
-import {QuestionService} from '../../../services/question.service';
+import {AnswerWithSuggestions} from '../../../types/answer';
+import {useWindowDimensions} from 'react-native';
 
 const FeedbackSessionForm: React.FC = () => {
   const [images, setImages] = useState<
@@ -29,26 +28,22 @@ const FeedbackSessionForm: React.FC = () => {
   const [showImagePicker, setShowImagePicker] = useState(false);
   const {t} = useTranslation();
   const {
-    state: {sessionId, answerId},
-  } = useLocation();
+    state: {sessionId, answer},
+  }: {state: {sessionId: string; answer: AnswerWithSuggestions}} =
+    useLocation();
   const navigate = useNavigate();
-  const [question, setQuestion] = useState<Question>();
   const [actions, setActions] = useState('');
   const [submittedWithError, setSubmittedWithError] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const theme = useTheme();
 
-  useEffect(() => {
-    QuestionService.findQuestionByAnswerId(answerId).then(setQuestion);
-  }, [answerId]);
-
   const finishCoachSession = async () => {
     setLoading(true);
     if (actions) {
       const feedbackId = await SessionService.createLocalFeedback(
         {
-          answer_id: answerId,
+          answer_id: answer.id,
           value: actions,
         },
         sessionId,
@@ -72,13 +67,12 @@ const FeedbackSessionForm: React.FC = () => {
     setLoading(false);
   };
 
-  if (!question) {
-    return (
-      <Center bg="white" w="full" h="full">
-        <Spinner size="lg" />
-      </Center>
-    );
-  }
+  const PAGE_WIDTH = useWindowDimensions().width;
+  const baseOptions = {
+    vertical: false,
+    width: PAGE_WIDTH * 0.85,
+    height: PAGE_WIDTH / 2,
+  } as const;
 
   return (
     <Page back title={t('feedbackSession.title')}>
@@ -91,11 +85,11 @@ const FeedbackSessionForm: React.FC = () => {
             {t('feedback.form.subtitle')}
           </Text>
 
-          <VStack mt={7} space={5}>
+          <VStack mt={7} space={0}>
             <Text fontSize={'18px'} fontWeight={700} color={'gray.700'}>
-              {question.title}
+              {answer?.question?.title}
             </Text>
-            <Text fontSize={'LMD'} fontWeight={500} color={'gray.700'}>
+            <Text fontSize={'LMD'} mt={4} fontWeight={500} color={'gray.700'}>
               {t('feedback.form.actionsToImprove')}
             </Text>
             <Text fontSize={'TXS'} fontWeight={400} color={'gray.600'}>
@@ -110,6 +104,41 @@ const FeedbackSessionForm: React.FC = () => {
               placeholder={t('feedback.form.textAreaPlaceholder')}
               onChangeText={setActions}
             />
+
+            {answer.suggestions && Array.isArray(answer.suggestions) && (
+              <VStack>
+                <HStack mt={'5'}>
+                  <Icon
+                    name={'sparkle'}
+                    color={theme.colors.violet['200'] as string}
+                  />
+                  <Text
+                    ml={1}
+                    fontSize={'TSM'}
+                    fontWeight={400}
+                    color={'gray.700'}>
+                    Actions suggested by AI
+                  </Text>
+                </HStack>
+
+                {/*   <Carousel
+                  {...baseOptions}
+                  loop={false}
+                  style={{width: '100%'}}
+                  data={answer.suggestions}
+                  pagingEnabled={true}
+                  onSnapToItem={index => console.log('current index:', index)}
+                  renderItem={({index}) => (
+                    <View
+                      bg={'gray.100'}
+                      borderRadius={'8px'}
+                      flex={1}
+                      px={2}
+                      py={4}></View>
+                  )}
+                /> */}
+              </VStack>
+            )}
           </VStack>
 
           <VStack>

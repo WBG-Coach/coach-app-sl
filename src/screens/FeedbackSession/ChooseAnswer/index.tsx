@@ -30,13 +30,10 @@ const FeedbackSessionChooseAnswer: React.FC = () => {
   const goToFeedbackForm = () => {
     if (selectedAnswer) {
       if (AIAnswer) {
-        navigate(
-          PathRoutes.feedbackSession.ai.loading.replace(':answerId', AIAnswer),
-          {
-            replace: true,
-            state,
-          },
-        );
+        navigate(PathRoutes.feedbackSession.ai.loading, {
+          replace: true,
+          state: {...state, answerId: selectedAnswer.id},
+        });
 
         return;
       }

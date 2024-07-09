@@ -52,10 +52,13 @@ const SyncService = {
         answers: firstSync ? [] : await SyncService.getPendingAnswers(db),
         feedbacks: firstSync ? [] : await SyncService.getPendingFeedbacks(db),
       };
+
       console.log('2');
 
       const currentSchool = await StorageService.getCurrentSchool();
       const lastSync = await StorageService.getLastSync();
+
+      console.log(currentSchool?.schoolKey);
 
       const response = await axios.post<SyncData>(
         `${API_URL}/sync`,

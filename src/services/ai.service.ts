@@ -12,25 +12,23 @@ export const AIService = {
     const currentSchool = await StorageService.getCurrentSchool();
 
     return (
-      await axios.post(
-        `${API_URL}/generate-suggestion`,
-        {answer},
-        {
-          headers: {token: currentSchool?.schoolKey},
-        },
-      )
+      await axios.post(`${API_URL}/generate-suggestion`, answer, {
+        headers: {token: currentSchool?.schoolKey},
+      })
     ).data;
   },
 
   selectAnswer: async (params: CompetenceAnswers[]): Promise<Answer> => {
     const currentSchool = await StorageService.getCurrentSchool();
 
-    return await axios.post(
-      `${API_URL}/select-question`,
-      {answers: params, schoolId: currentSchool?.id},
-      {
-        headers: {token: currentSchool?.schoolKey},
-      },
-    );
+    return (
+      await axios.post(
+        `${API_URL}/select-answer`,
+        {competences: params, schoolId: currentSchool?.id},
+        {
+          headers: {token: currentSchool?.schoolKey},
+        },
+      )
+    ).data;
   },
 };

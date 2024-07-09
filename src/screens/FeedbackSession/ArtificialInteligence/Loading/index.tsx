@@ -10,8 +10,9 @@ import {AIService} from '../../../../services/ai.service';
 
 const FeedbackAILoading = () => {
   const navigate = useNavigate();
-  const {answerId} = useParams();
-  const {state} = useLocation();
+  const {
+    state: {answerId, ...state},
+  } = useLocation();
   const {t} = useTranslation();
 
   useEffect(() => {
@@ -34,7 +35,7 @@ const FeedbackAILoading = () => {
           answer = await AIService.selectAnswer(competenceAnswers);
         }
 
-        console.log('Answer Selected ->', answer);
+        console.log(answer);
 
         AIService.generateSuggestion(answer).then(suggestion =>
           navigate(PathRoutes.feedbackSession.ai.suggestion, {
