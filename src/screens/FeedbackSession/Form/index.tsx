@@ -7,6 +7,7 @@ import {
   useTheme,
   ScrollView,
   View,
+  Center,
 } from 'native-base';
 import ImagePickerModal from '../../../components/ImagePickerModal';
 import {SessionService} from '../../../services/session.service';
@@ -19,7 +20,8 @@ import {useTranslation} from 'react-i18next';
 import Icon from '../../../components/Icon';
 import Page from '../../../components/Page';
 import {AnswerWithSuggestions} from '../../../types/answer';
-import {useWindowDimensions} from 'react-native';
+import {TouchableOpacity, useWindowDimensions} from 'react-native';
+import Carousel from 'react-native-reanimated-carousel';
 
 const FeedbackSessionForm: React.FC = () => {
   const [images, setImages] = useState<
@@ -34,6 +36,7 @@ const FeedbackSessionForm: React.FC = () => {
   const navigate = useNavigate();
   const [actions, setActions] = useState('');
   const [submittedWithError, setSubmittedWithError] = useState(false);
+  const [selectedSuggests, setSelectedSuggests] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
   const theme = useTheme();
@@ -71,7 +74,7 @@ const FeedbackSessionForm: React.FC = () => {
   const baseOptions = {
     vertical: false,
     width: PAGE_WIDTH * 0.85,
-    height: PAGE_WIDTH / 2,
+    height: PAGE_WIDTH / 3,
   } as const;
 
   return (
@@ -107,7 +110,7 @@ const FeedbackSessionForm: React.FC = () => {
 
             {answer.suggestions && Array.isArray(answer.suggestions) && (
               <VStack>
-                <HStack mt={'5'}>
+                <HStack mt={5} mb={3}>
                   <Icon
                     name={'sparkle'}
                     color={theme.colors.violet['200'] as string}
@@ -121,22 +124,122 @@ const FeedbackSessionForm: React.FC = () => {
                   </Text>
                 </HStack>
 
-                {/*   <Carousel
+                <Carousel
                   {...baseOptions}
                   loop={false}
                   style={{width: '100%'}}
-                  data={answer.suggestions}
+                  data={answer.suggestions.filter(
+                    suggests => !selectedSuggests.includes(suggests),
+                  )}
                   pagingEnabled={true}
-                  onSnapToItem={index => console.log('current index:', index)}
-                  renderItem={({index}) => (
-                    <View
+                  renderItem={({item, index}) => (
+                    <VStack
                       bg={'gray.100'}
                       borderRadius={'8px'}
-                      flex={1}
+                      mr={3}
                       px={2}
-                      py={4}></View>
+                      py={4}>
+                      <HStack alignItems={'center'}>
+                        <Text
+                          fontSize={'TXS'}
+                          flex={1}
+                          fontWeight={400}
+                          color={'gray.700'}>
+                          Suggestion {selectedSuggests.length + index + 1}
+                        </Text>
+
+                        <TouchableOpacity
+                          onPress={() =>
+                            setSelectedSuggests(previous => [...previous, item])
+                          }>
+                          <HStack
+                            bg={'gray.200'}
+                            px={'2'}
+                            py={1}
+                            borderRadius={'500'}
+                            alignItems={'center'}
+                            space={1}>
+                            <Icon name="plus" size={16} />
+                            <Text
+                              fontSize={'LSM'}
+                              fontWeight={500}
+                              color={'gray.800'}>
+                              Select
+                            </Text>
+                          </HStack>
+                        </TouchableOpacity>
+                      </HStack>
+
+                      <Text
+                        fontSize={'TXS'}
+                        fontWeight={400}
+                        mt={1}
+                        color={'gray.700'}>
+                        {item}
+                      </Text>
+                    </VStack>
                   )}
-                /> */}
+                />
+
+                <VStack space={2}>
+                  {selectedSuggests.map(suggest => (
+                    <VStack
+                      borderRadius={'8px'}
+                      w={'full'}
+                      borderWidth={'1px'}
+                      borderColor={'gray.200'}
+                      mr={3}
+                      px={2}
+                      py={4}>
+                      <HStack>
+                        <HStack flex={1} alignItems={'center'} space={1}>
+                          <Icon
+                            name={'check-circle-solid'}
+                            size={16}
+                            color={theme.colors.violet['200'] as string}
+                          />
+                          <Text
+                            fontSize={'TXS'}
+                            fontWeight={400}
+                            color={'gray.700'}>
+                            Action added
+                          </Text>
+                        </HStack>
+
+                        <TouchableOpacity
+                          onPress={() =>
+                            setSelectedSuggests(previous =>
+                              previous.filter(pSuggest => pSuggest !== suggest),
+                            )
+                          }>
+                          <HStack
+                            bg={'gray.200'}
+                            px={'2'}
+                            py={1}
+                            borderRadius={'500'}
+                            alignItems={'center'}
+                            space={1}>
+                            <Icon name="minus" size={16} />
+                            <Text
+                              fontSize={'LSM'}
+                              fontWeight={500}
+                              color={'gray.800'}>
+                              Remove
+                            </Text>
+                          </HStack>
+                        </TouchableOpacity>
+                      </HStack>
+
+                      <Text
+                        fontSize={'TXS'}
+                        fontWeight={400}
+                        mt={1}
+                        color={'gray.700'}>
+                        {suggest}
+                      </Text>
+                    </VStack>
+                  ))}
+                </VStack>
               </VStack>
             )}
           </VStack>

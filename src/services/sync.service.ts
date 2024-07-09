@@ -58,7 +58,7 @@ const SyncService = {
       const currentSchool = await StorageService.getCurrentSchool();
       const lastSync = await StorageService.getLastSync();
 
-      console.log(currentSchool?.schoolKey);
+      console.log('Key:', currentSchool?.schoolKey);
 
       const response = await axios.post<SyncData>(
         `${API_URL}/sync`,
@@ -72,6 +72,8 @@ const SyncService = {
         },
         {headers: {token: currentSchool?.schoolKey}},
       );
+
+      console.log('Finished API Request');
 
       if (response.status !== 200) {
         throw new Error('Fail to sync');
