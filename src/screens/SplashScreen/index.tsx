@@ -12,12 +12,14 @@ import {LOGIN_MODE} from '@env';
 import {useCameraPermission} from 'react-native-vision-camera';
 import {runSeeds} from '../../database/seeds';
 
+
 const SplashScreen: React.FC = () => {
   const navigate = useNavigate();
   const {isConnected} = useNetInfo();
   const [isLoading, setIsLoading] = useState(false);
   const {selectCoach, selectSchool} = useCoachContext();
   const {hasPermission, requestPermission} = useCameraPermission();
+
 
   const setupApp = useCallback(async () => {
     setIsLoading(true);
